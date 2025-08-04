@@ -59,6 +59,6 @@ let RunSentimentAnalysis = () => {
         }
     };
 
-    xhttp.open("GET", `emotionDetector?textToAnalyze=${encodeURIComponent(textToAnalyze)}`, true);
+    xhttp.open("GET", `/emotionDetector?textToAnalyze=${encodeURIComponent(textToAnalyze)}`, true);
     xhttp.send();
 };
