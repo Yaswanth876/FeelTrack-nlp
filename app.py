@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
-from EmotionDetection.emotion_detection import detect_emotion
+from EmotionDetection.emotion_detection import emotion_detector
+
 from dotenv import load_dotenv
 import os
 
