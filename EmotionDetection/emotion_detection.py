@@ -9,6 +9,9 @@ load_dotenv()
 API_URL = "https://api-inference.huggingface.co/models/bhadresh-savani/bert-base-go-emotion"
 API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")  # Automatically read from environment
 
+if not API_TOKEN or API_TOKEN == "":
+    raise Exception("HUGGINGFACE_API_TOKEN is missing or empty. Please set it in your .env file.")
+
 # 🛡️ Headers for Authorization
 headers = {
     "Authorization": f"Bearer {API_TOKEN}"
@@ -23,6 +26,8 @@ def emotion_detector(text_to_analyse):
     response = requests.post(API_URL, headers=headers, json={"inputs": text_to_analyse})
 
     # ❌ Check for request failure
+    if response.status_code == 401:
+        raise Exception("Invalid Hugging Face API credentials. Please check your HUGGINGFACE_API_TOKEN.")
     if response.status_code != 200:
         raise Exception(f"API Error {response.status_code}: {response.text}")
 
