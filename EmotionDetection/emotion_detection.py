@@ -1,9 +1,15 @@
 import requests
-import os
 from dotenv import load_dotenv
+import os
 
-# ✅ Load the environment variables from the .env file (used locally)
-load_dotenv()
+# ✅ Explicitly load the correct file
+load_dotenv("token.env")
+
+API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
+
+if not API_TOKEN or API_TOKEN == "":
+    raise Exception("HUGGINGFACE_API_TOKEN is missing or empty. Please set it in your token.env file.")
+
 
 # 🌐 Hugging Face API Endpoint and Token
 API_URL = "https://api-inference.huggingface.co/models/bhadresh-savani/bert-base-go-emotion"
