@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FeelTrack - Emotion Detector using BERT</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="./static/mywebscript.js" defer></script>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .center-heading {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .card {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 12px;
+        }
+        .form-control {
+            resize: none;
+        }
+        .btn-primary {
+            font-size: 1.1rem;
+            padding: 10px 30px;
+        }
+        #system_response ul {
+            padding-left: 0;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="center-heading">🧠 FeelTrack - Emotion Detector</h1> 
+            <p class="text-center text-muted">Powered by BERT and Deep Learning 🚀</p>
+
+            <div class="form-group">
+                <label for="textToAnalyze"><strong>Enter your text to analyze emotional tone:</strong></label>
+                <textarea class="form-control" id="textToAnalyze" rows="5" placeholder="Type something like: I'm feeling hopeful but also scared about the future..."></textarea>
+            </div>
+
+            <div class="text-center mb-4">
+                <button onclick="RunSentimentAnalysis()" class="btn btn-primary btn-lg">🔍 Run Emotion Analysis</button>
+            </div>
+
+            <!-- 👇 Loading spinner added here -->
+            <div id="loading_spinner" class="text-center" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Analyzing...</span>
+                </div>
+                <p class="text-muted">Analyzing text...</p>
+            </div>
+
+            <h4><strong>🧾 Analysis Result:</strong></h4>
+            <div id="system_response" class="mt-3 p-3 bg-light border rounded"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: FeelTrack
+    env: python
+    buildCommand: ""
+    startCommand: ./start.sh
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10
+    plan: free
