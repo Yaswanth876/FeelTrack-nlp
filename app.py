@@ -19,7 +19,7 @@ def emotion_analysis():
         return jsonify({"error": "No text provided"}), 400
 
     try:
-        result = detect_emotion(text)
+        result = emotion_detector(text)
         return jsonify(result)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
