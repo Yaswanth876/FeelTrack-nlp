@@ -12,7 +12,7 @@ if not API_TOKEN or API_TOKEN == "":
 
 
 # 🌐 Hugging Face API Endpoint and Token
-API_URL = "https://api-inference.huggingface.co/models/bhadresh-savani/bert-base-go-emotion"
+API_URL = "https://api-inference.huggingface.co/models/bhadresh-savani/bert-base-uncased-go-emotion"
 API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")  # Automatically read from environment
 
 if not API_TOKEN or API_TOKEN == "":
