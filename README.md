@@ -94,7 +94,8 @@ FeelTrack-nlp/
 
 ### 👨‍💻 Author
 
-**Yaswanth V** — AI/ML Aspirant | Python Developer
+ **Made by [Yaswanth V](https://www.linkedin.com/in/yaswanthv876/)**
+- AI/ML Aspirant | Python Developer
 📍 Madurai, Tamil Nadu
 🎓 Thiagarajar College of Engineering
 
