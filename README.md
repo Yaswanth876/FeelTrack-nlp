@@ -75,7 +75,7 @@ FeelTrack-nlp/
 ---
 ### 📸 Preview
 
-📷 !(demo.png)
+![Demo Screenshot](demo.png)
 
 ---
 
