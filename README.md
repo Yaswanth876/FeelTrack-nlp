@@ -75,10 +75,19 @@ FeelTrack-nlp/
 ---
 ### 📸 Preview
 
-📷 demo.png
+📷 !(demo.png)
 
 ---
 
 ### 👨‍💻 Author
-Yaswanth V
+
+**Yaswanth V** — AI/ML Aspirant | Python Developer
+📍 Madurai, Tamil Nadu
+🎓 Thiagarajar College of Engineering
+
+
 ---
+
+## 📌 License
+
+This project is licensed under the [MIT License](LICENSE).
