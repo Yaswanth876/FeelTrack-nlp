@@ -3,7 +3,7 @@ from torch.nn.functional import softmax
 import torch
 
 # Load BERT model and tokenizer only once (reuse across calls)
-model_name = "joeddav/distilbert-base-uncased-go-emotions-student"
+model_name = "bhadresh-savani/bert-base-go-emotion"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
