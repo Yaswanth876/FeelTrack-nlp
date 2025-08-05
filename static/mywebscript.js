@@ -1,53 +1,47 @@
-async function RunSentimentAnalysis() {
-    const textToAnalyze = document.getElementById("textToAnalyze").value.trim();
-    const output = document.getElementById("system_response");
+document.addEventListener("DOMContentLoaded", function () {
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const inputField = document.getElementById("textInput");
+    const resultDiv = document.getElementById("result");
 
-    // If no text, warn the user
-    if (!textToAnalyze) {
-        output.innerHTML = "<div class='alert alert-warning'>⚠️ Please enter some text to analyze.</div>";
-        return;
-    }
+    analyzeBtn.addEventListener("click", function () {
+        const userInput = inputField.value.trim();
 
-    // Show loading state
-    output.innerHTML = "<div class='alert alert-info'>⏳ Analyzing emotions... Please wait.</div>";
-
-    try {
-        // Fetch JSON response from Flask
-        const response = await fetch(
-            `/emotionDetector?textToAnalyze=${encodeURIComponent(textToAnalyze)}`
-        );
-
-        // Handle HTTP errors
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || response.statusText);
+        if (!userInput) {
+            resultDiv.innerHTML = `<p style="color: red;">Please enter some text.</p>`;
+            return;
         }
 
-        // Parse JSON
-        const data = await response.json();
+        // Clear previous results
+        resultDiv.innerHTML = "<p>Analyzing emotions...</p>";
 
-        // Build result HTML
-        let outputHTML = "<h5>🎭 Emotion Analysis Result</h5><ul class='list-group'>";
-        for (const [emotion, score] of Object.entries(data)) {
-            if (emotion !== 'dominant_emotion') {
-                const label = emotion.charAt(0).toUpperCase() + emotion.slice(1);
-                outputHTML += `
-                    <li class='list-group-item d-flex justify-content-between align-items-center'>
-                        ${label}
-                        <span class='badge bg-primary rounded-pill'>${(score * 100).toFixed(2)}%</span>
-                    </li>`;
+        fetch("/detect", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text: userInput })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                resultDiv.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+            } else {
+                // Display results
+                let output = `<h4>Dominant Emotion: <span style="color: green;">${data.dominant_emotion}</span></h4>`;
+                output += "<ul>";
+
+                for (const [emotion, score] of Object.entries(data)) {
+                    if (emotion === "dominant_emotion") continue;
+                    output += `<li><strong>${emotion}</strong>: ${(score * 100).toFixed(2)}%</li>`;
+                }
+
+                output += "</ul>";
+                resultDiv.innerHTML = output;
             }
-        }
-        outputHTML += `</ul>
-            <div class='mt-3'>
-                <strong>🔥 Dominant Emotion:</strong>
-                <span class='text-success'>${data.dominant_emotion.toUpperCase()}</span>
-            </div>`;
-
-        // Render to page
-        output.innerHTML = outputHTML;
-    } catch (e) {
-        // Show error to user
-        output.innerHTML = `<div class='alert alert-danger'>❌ ${e.message}</div>`;
-    }
-}
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            resultDiv.innerHTML = `<p style="color: red;">Failed to fetch data. Is the server running?</p>`;
+        });
+    });
+});
