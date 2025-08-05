@@ -1,47 +1,31 @@
-# EmotionDetection.py
-
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from torch.nn.functional import softmax
 import torch
 
-# Load model and tokenizer once
+# Load BERT model and tokenizer only once (reuse across calls)
 model_name = "bhadresh-savani/bert-base-go-emotion"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
-try:
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSequenceClassification.from_pretrained(model_name)
-    id2label = model.config.id2label
-except Exception as e:
-    raise RuntimeError(f"Error loading model/tokenizer: {str(e)}")
-
+# Get label mapping from model config
+id2label = model.config.id2label
 
 def emotion_detector(text_to_analyse):
-    if not text_to_analyse or not text_to_analyse.strip():
-        return {"error": "Input text cannot be empty."}
+    # Tokenize input text
+    inputs = tokenizer(text_to_analyse, return_tensors="pt", truncation=True)
+    
+    # Run through model
+    outputs = model(**inputs)
+    probs = softmax(outputs.logits, dim=1)[0]  # Take the first row (single sentence)
+    
+    # Convert logits to dictionary of emotion: score
+    emotion_scores = {id2label[i]: float(probs[i]) for i in range(len(probs))}
 
-    try:
-        # Tokenize input text
-        inputs = tokenizer(text_to_analyse, return_tensors="pt", truncation=True)
+    # Sort emotions by probability
+    sorted_emotions = dict(sorted(emotion_scores.items(), key=lambda item: item[1], reverse=True))
 
-        # Get model predictions
-        with torch.no_grad():
-            outputs = model(**inputs)
+    # Add dominant emotion to the dictionary
+    top_emotion = max(emotion_scores, key=emotion_scores.get)
+    sorted_emotions['dominant_emotion'] = top_emotion
 
-        # Convert logits to probabilities
-        probs = softmax(outputs.logits, dim=1)[0]
-
-        # Create emotion: score mapping
-        emotion_scores = {id2label[i]: float(probs[i]) for i in range(len(probs))}
-
-        # Sort emotions by score
-        sorted_emotions = dict(
-            sorted(emotion_scores.items(), key=lambda item: item[1], reverse=True)
-        )
-
-        # Add dominant emotion
-        sorted_emotions['dominant_emotion'] = max(emotion_scores, key=emotion_scores.get)
-
-        return sorted_emotions
-
-    except Exception as e:
-        return {"error": f"Emotion detection failed: {str(e)}"}
+    return sorted_emotions
