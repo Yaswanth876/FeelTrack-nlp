@@ -1,29 +1,32 @@
-from flask import Flask, request, render_template, jsonify
-from EmotionDetection import emotion_detector
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from torch.nn.functional import softmax
 import torch
 
-app = Flask(__name__)
+# Load BERT model and tokenizer only once (reuse across calls)
+model_name = "bhadresh-savani/bert-base-go-emotion"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
-torch.set_grad_enabled(False)  # Optional, but good practice for inference apps
+# Get label mapping from model config
+id2label = model.config.id2label
 
-@app.route('/')
-def home():
-    return render_template('index.html')  # Make sure index.html is in templates/
+def emotion_detector(text_to_analyse):
+    # Tokenize input text
+    inputs = tokenizer(text_to_analyse, return_tensors="pt", truncation=True)
+    
+    # Run through model
+    with torch.no_grad():  # Disable gradient computation
+        outputs = model(**inputs)
 
-@app.route('/emotionDetector', methods=['GET'])
-def detect_emotion():
-    text_to_analyze = request.args.get('textToAnalyze', '').strip()
+    probs = softmax(outputs.logits, dim=1)[0]  # Single sentence output
+    
+    # Convert logits to dictionary of emotion: score
+    emotion_scores = {id2label[i]: float(probs[i]) for i in range(len(probs))}
 
-    if not text_to_analyze:
-        return jsonify({"error": "No text received. Please enter some text."}), 400
+    # Sort emotions by probability
+    sorted_emotions = dict(sorted(emotion_scores.items(), key=lambda item: item[1], reverse=True))
 
-    try:
-        result = emotion_detector(text_to_analyze)
-        return jsonify(result)
+    # Add dominant emotion
+    sorted_emotions['dominant_emotion'] = max(emotion_scores, key=emotion_scores.get)
 
-    except Exception as e:
-        print(f"Error during emotion detection: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    return sorted_emotions

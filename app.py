@@ -4,12 +4,11 @@ import torch
 
 app = Flask(__name__)
 
-# Ensure PyTorch doesn't track gradients during inference
-torch.set_grad_enabled(False)
+torch.set_grad_enabled(False)  # Optional, but good practice for inference apps
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html')  # Make sure index.html is in templates/
 
 @app.route('/emotionDetector', methods=['GET'])
 def detect_emotion():
@@ -27,5 +26,4 @@ def detect_emotion():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    # Use host='0.0.0.0' to allow access on LAN if needed
     app.run(debug=True)
