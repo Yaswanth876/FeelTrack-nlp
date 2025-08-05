@@ -21,6 +21,23 @@
 
 ---
 
+### 📸 Preview
+
+![Demo Screenshot](static/demo.png)
+
+---
+
+## 🚀 Tech Stack
+
+| Layer | Tech |
+|------|------|
+| 🧠 NLP | `transformers`, `torch`, `pipeline()` |
+| 🌐 Backend | Flask |
+| 🖼️ Frontend | HTML5, Bootstrap, JS |
+| 📦 Package Manager | pip |
+
+---
+
 ## 🚀 Getting Started (Localhost)
 
 ### 1. Clone this repository
@@ -71,11 +88,6 @@ FeelTrack-nlp/
 ├── requirements.txt
 └── README.md
 ```
-
----
-### 📸 Preview
-
-![Demo Screenshot](static/demo.png)
 
 ---
 
