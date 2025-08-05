@@ -68,7 +68,8 @@ App will run at: http://localhost:5000
 
 ### 🧠 Model Used
 ```
-Model: bhadresh-savani/distilbert-base-uncased-emotion
+Model: bhadresh-savani/bert-base-go-emotion
+
 ```
 Platform: Hugging Face
 
